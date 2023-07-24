@@ -1,0 +1,10 @@
+[wrap-git]
+directory=cppfront
+url=https://github.com/hsutter/cppfront
+revision=main
+
+patch_directory=cppfront
+
+[provide]
+cpp2 = cpp2_dep
+program_names = cppfront
