@@ -1,3 +1,51 @@
-main : () -> int = {
-     return 0;
+
+// As of April 2023 no cpp2 syntax for enums
+enum OpCode : uint8_t {
+       RETURN
+};
+
+size_t simpleInstruction(const char* name, size_t offset)
+{
+  printf("%s\n", name);
+  return offset+1;
+}
+
+size_t unknownInstruction(OpCode opcode, size_t offset)
+{
+  printf("+++Unknown opcode 0x%02x+++\n", static_cast<uint8_t>(opcode));
+  return offset+1;
+}
+
+size_t disassembleInstruction(const std::vector<OpCode>& code, size_t offset)
+{
+  printf("%4d ", offset);
+  const auto opcode = code[offset];
+  switch (opcode) {
+    case OpCode::RETURN:
+      return simpleInstruction("OP_RETURN", offset);
+    default:
+      return unknownInstruction(opcode, offset);
+  }
+}
+
+Chunk : type = {
+      code: std::vector<OpCode> = ();
+
+      size: (this) -> size_t = this.code.size();
+      write: (inout this, byte: OpCode) = {
+      	     this.code.push_back(byte);	     
+      }
+      disassemble: (this, name: std::string_view) = {
+      	std::cout << "== " << name << " ==" << std::endl;
+	(copy i: size_t = 0) while i<this.size() {
+	    i = disassembleInstruction(this.code, i);
+	}
+      }
+}
+
+main: () -> int= {
+      chunk: Chunk = ();
+      chunk.write(OpCode::RETURN);
+      chunk.disassemble("test chunk");
+      return 0;
 }
