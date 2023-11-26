@@ -1,0 +1,21 @@
+// custom_trype.h2
+//
+// Part of cpp2lox
+//
+// This file has not parallel in the book, but exists to hold type created
+// to match the structure of the official text.
+
+// Artifically limited dynamic array to match the behavior of lox
+// Implements only what is needed.
+Vec256: <T> type =
+{
+  v: std::vector<T>;
+
+  operator[]: (this, i: u8) -> _ = { return v[i]; }
+  push_back: (inout this, newValue: T) = {
+    if v.size()>(255 as u8) { std::runtime_error("Array full"); }
+    v.push_back(newValue);
+  }
+  size: (this) -> u8 = {  return cpp2::unsafe_narrow<u8>(v.size()); }
+}
+

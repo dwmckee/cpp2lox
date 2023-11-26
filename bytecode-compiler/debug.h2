@@ -1,0 +1,25 @@
+// debug.h2
+//
+// Part of cpp2lox
+
+constantInstruction: (name: std::string_view, chunk: Chunk, offset: u8) -> u8 =
+{
+  constantIdx:= chunk[offset+1];
+  printf("%-16s [%3d] = ", name.data(), constantIdx);
+  value:= chunk.constant(constantIdx);
+  value.print();
+  printf("\n");
+  return offset+2;
+}
+
+simpleInstruction: (name: std::string_view, offset: u8) -> u8 = 
+{
+  printf("%s\n", name.data());
+  return offset+1;
+}
+ 
+unknownInstruction: (opcode: u8, offset: u8) -> u8 = 
+{
+  printf("+++Unknown opcode 0x%02x+++\n", opcode as u8);
+  return offset+1;
+}

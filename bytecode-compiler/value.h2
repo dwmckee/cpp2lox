@@ -1,0 +1,14 @@
+// value.h2
+//
+// Part of cpp2lox
+
+Value: type =
+{
+  value: double = 0;
+
+  operator=: (out this) = {}
+  operator=: (out this, dval: double) = { value = dval; }
+  operator=: (out this, in that) = { value = that.value; }
+  print: (this) = { printf("%g", value); }
+}
+

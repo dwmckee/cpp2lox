@@ -1,0 +1,68 @@
+// chunk.h2
+//
+// Part of cpp2lox
+
+OpCode: @enum<u8> type =
+{
+  CONSTANT;
+  RETURN;
+}
+
+Chunk: type =
+{
+  code: Vec256<u8> = ();
+  constants: Vec256<Value> = ();
+  lines: Vec256<int> = ();
+  
+  operator=: (out this) = {}
+  
+  operator[]: (this, i: u8) -> u8 = { return code[i]; }
+  addConstant: (inout this, value: Value) -> u8 =
+  {
+    constants.push_back(value);
+    return constants.size()-1;
+  }
+  byteCode: (this, index: u8) -> u8 = { return code[index]; }
+  constant: (this, index: u8) -> Value = { return constants[index]; }
+  disassemble: (this, name: std::string_view) =
+  {
+    std::cout << "== " << name << " ==" << std::endl;
+    (copy i: size_t = 0) while i<size()
+    {
+      i = disassembleInstruction(i);
+    }
+  }
+  disassembleInstruction: (this, offset: u8) -> u8 =
+  {
+    printf("%4u ", offset);
+    if (offset>0u && line(offset)!=line(offset-1))
+    {
+      printf("  |  ");
+    }
+    else
+    {
+      printf("%4d ", line(offset));
+    }
+    return this.disassembleOpcode(offset);
+  }
+  disassembleOpcode: (this, offset: u8) -> u8 =
+  {
+    opcode: u8 = code[offset];
+    return inspect opcode -> u8 {
+      is (OpCode::CONSTANT.get_raw_value()) = constantInstruction("OP_CONSTANT", this, offset); 
+      is (OpCode::RETURN.get_raw_value()) = simpleInstruction("OP_RETURN", offset);
+      is _ = unknownInstruction(opcode, offset);
+    };
+  }
+  line: (this, offset: size_t) -> int = {
+    return lines[offset];  
+  }
+  size: (this) -> u8 = { return code.size(); }
+  write: (inout this, byte: u8, lineNum: int) = {
+    code.push_back(byte);
+    lines.push_back(lineNum);
+  }
+}
+
+
+
