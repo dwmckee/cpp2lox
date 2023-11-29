@@ -62,6 +62,9 @@ Chunk: type =
     code.push_back(byte);
     lines.push_back(lineNum);
   }
+  write: (inout this, opcode: OpCode, lineNum: int) = {
+    write(opcode.get_raw_value(), lineNum);
+  }
 }
 
 
