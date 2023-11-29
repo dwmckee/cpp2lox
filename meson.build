@@ -13,9 +13,10 @@ g = generator(cppfront,
 # TODO: Tree Walk Intrepreter
 
 # Byte-code compiler
-bc_inc = include_directories('bytecode-compiler')
-bc_sources = g.process('bytecode-compiler/lox-bc.cpp2',
-                      include_directories: bc_inc)
-executable('lox-bc', bc_sources,
-   dependencies: [cpp2_dep])
+bc_sources = g.process(['bytecode-compiler/lox-bc.cpp2',
+                        'bytecode-compiler/chunk.h2',
+                        'bytecode-compiler/custom_types.h2',
+                        'bytecode-compiler/debug.h2',
+                        'bytecode-compiler/value.h2'])
+executable('lox-bc', bc_sources, dependencies: [cpp2_dep])
 

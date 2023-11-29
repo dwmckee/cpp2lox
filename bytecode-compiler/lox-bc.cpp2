@@ -2,19 +2,14 @@
 //
 // lox bytecode compiler/vm in cpp2
 
-#include "chunk.h2"
-#include "custom_types.h2"
-#include "debug.h2"
-#include "value.h2"
-
 main: () -> int =
 {
   chunk: Chunk = ();
   constant:= chunk.addConstant(Value(1.2));
-  chunk.write(OpCode::CONSTANT.get_raw_value(), 123);
+  chunk.write(OpCode::CONSTANT, 123);
   chunk.write(constant, 123);
 
-  chunk.write(OpCode::RETURN.get_raw_value(), 124);
+  chunk.write(OpCode::RETURN, 124);
 
   chunk.disassemble("test chunk");
   return 0;
